@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "erd2drawio"
+version = "0.0.1"
+authors = ["Greateapot <greateapot998@gmail.com>"]
+description = 'ERD Editor .erd file to .drawio convertor'
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/Greateapot/erd2drawio"
+repository = "https://github.com/Greateapot/erd2drawio"
+classifiers = [
+    "Environment :: Console",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Typing :: Typed",
+]
+packages = [{ include = "erd2drawio", from = "src" }]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+[tool.poetry.scripts]
+erd2drawio = "erd2drawio.cli:main"
+
+[build-system]
+requires = ["poetry-core>=1.0.0", "setuptools", "wheel"]
+build-backend = "poetry.core.masonry.api"
