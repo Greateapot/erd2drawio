@@ -17,6 +17,7 @@ packages = [{ include = "erd2drawio", from = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.11"
+pydantic = "^2.6.4"
 
 [tool.poetry.scripts]
 erd2drawio = "erd2drawio.cli:main"
