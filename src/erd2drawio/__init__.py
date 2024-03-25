@@ -194,13 +194,14 @@ def create_column_key_cell(
     document: minidom.Document,
     columnEntity: models.TableColumnEntities1,
     foreignKeyCounter: int = 0,
+    isDoubleKey: bool = False,
 ) -> minidom.Element:
     return create_element(
         document,
         Tags.MX_CELL,
         create_geometry(
             document,
-            Defaults.KEY_WIDTH,
+            Defaults.KEY_WIDTH * (2 if isDoubleKey else 1),
             Defaults.HEIGHT,
             rectangle=True,
         ),
@@ -218,6 +219,7 @@ def create_column_key_cell(
 def create_column_name_cell(
     document: minidom.Document,
     columnEntity: models.TableColumnEntities1,
+    isDoubleKey: bool = False,
 ) -> minidom.Element:
     return create_element(
         document,
@@ -226,13 +228,13 @@ def create_column_name_cell(
             document,
             Defaults.COLUMN_NAME_WIDTH,
             Defaults.HEIGHT,
-            Defaults.KEY_WIDTH,
+            Defaults.KEY_WIDTH * (2 if isDoubleKey else 1),
             rectangle=True,
         ),
         _id=f"{columnEntity.id}-name",
         value=columnEntity.name,
         style=Styles.COLUMN_NAME.format(
-            FONT_STYLE=5 if columnEntity.ui.keys > 0 else 0,
+            FONT_STYLE=5 if columnEntity.ui.keys & 1 else 0,
         ),
         vertex=1,
         parent=f"{columnEntity.id}-base",
@@ -280,14 +282,15 @@ def create_root(
         tableEntity = schema.collections.tableEntities.root[tableId]
         root.appendChild(create_table_cell(document, tableEntity))
 
-        y = Defaults.HEIGHT
-        foreignKeyCounter = 1
-        is_key = True
-
         columnEntities = [
             schema.collections.tableColumnEntities.root[columnId]
             for columnId in tableEntity.columnIds
         ]
+
+        y = Defaults.HEIGHT
+        foreignKeyCounter = 1
+        isPrimaryKey = True
+        isDoubleKey = any(map(lambda x: x.ui.keys == 3, columnEntities))
 
         for key in (1, 3, 2, 0):
             for columnEntity in filter(lambda x: x.ui.keys == key, columnEntities):
@@ -296,7 +299,7 @@ def create_root(
                         document,
                         columnEntity,
                         y,
-                        top=is_key and not key,
+                        top=isPrimaryKey and not key & 1,
                     )
                 )
                 root.appendChild(
@@ -304,20 +307,22 @@ def create_root(
                         document,
                         columnEntity,
                         foreignKeyCounter,
+                        isDoubleKey,
                     )
                 )
                 root.appendChild(
                     create_column_name_cell(
                         document,
                         columnEntity,
+                        isDoubleKey,
                     )
                 )
 
                 if key > 1:
                     foreignKeyCounter += 1
                 y += Defaults.HEIGHT
-                if is_key and not key:
-                    is_key = False
+                if isPrimaryKey and not key & 1:
+                    isPrimaryKey = False
 
     for relationshipId in schema.doc.relationshipIds:
         root.appendChild(
