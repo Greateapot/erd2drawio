@@ -15,7 +15,7 @@ class Styles:
     COLUMN_BASE = "shape=tableRow;horizontal=0;startSize={START_SIZE};swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top={TOP};left=0;right=0;bottom=0;"
     COLUMN_KEY = "shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;fontStyle=1;overflow=hidden;whiteSpace=wrap;html=1;"
     COLUMN_NAME = "shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;fontStyle={FONT_STYLE};overflow=hidden;whiteSpace=wrap;html=1;"
-    RELATION_EDGE = "edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow={END_ARROW};startArrow={START_ARROW};rounded=0;exitX={FROM};exitY=0.5;exitDx=0;exitDy=0;entryX={TO};entryY=0.5;entryDx=0;entryDy=0;"
+    RELATION_EDGE = "edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow={END_ARROW};startArrow={START_ARROW};rounded=0;exitX={FROM};exitY=0.5;exitDx=0;exitDy=0;entryX={TO};entryY=0.5;entryDx=0;entryDy=0;endFill=0;"
 
 
 class Tags:
@@ -43,11 +43,11 @@ class RelationshipType:
 
     @staticmethod
     def ZERO_ONLY() -> RelationshipType:
-        return RelationshipType("ERzeroToOne", "ERmandOne")
+        return RelationshipType("ERmandOne", "ERzeroToOne")
 
     @staticmethod
     def ZERO_MANY() -> RelationshipType:
-        return RelationshipType("ERzeroToOne", "ERoneToMany")
+        return RelationshipType("ERmandOne", "ERzeroToMany")
 
     @staticmethod
     def get(relationshipType: int):
